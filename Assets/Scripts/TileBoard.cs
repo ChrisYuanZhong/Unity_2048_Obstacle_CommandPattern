@@ -5,7 +5,8 @@ using UnityEngine;
 public class TileBoard : MonoBehaviour
 {
     public GameManager gameManager;
-    public float animationDuration = 0.1f;
+    public static int undoCapacity = 3;
+    public static float animationDuration = 0.1f;
 
     public Tile tilePrefab;
     public TileState[] tileStates;
@@ -14,12 +15,31 @@ public class TileBoard : MonoBehaviour
     private List<Tile> tiles;
     private bool moving;
 
+    public TileGrid Grid => grid;
+
+    CommandManager commandManager;
+
     private void Awake()
     {
-        tilePrefab.animationDuration = this.animationDuration;
+        tilePrefab.animationDuration = animationDuration;
 
         grid = GetComponentInChildren<TileGrid>();
         tiles = new List<Tile>(16);
+    }
+
+    private void Start()
+    {
+        commandManager = new CommandManager(undoCapacity);
+    }
+
+    public void Undo()
+    {
+        commandManager.Undo();
+    }
+
+    public void Redo()
+    {
+        commandManager.Redo();
     }
 
     public void ClearBoard()
@@ -37,7 +57,7 @@ public class TileBoard : MonoBehaviour
         tiles.Clear();
     }
 
-    public void CreateTile()
+    public void SpawnRandomTile()
     {
         Tile tile = Instantiate(tilePrefab, grid.transform);
         tile.SetState(tileStates[0], 2);
@@ -54,31 +74,27 @@ public class TileBoard : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
-            Debug.Log("Up");
-
-            MoveTiles(Vector2Int.up, 0, 1, 1, 1);
+            ICommand command = new MoveCommand(Vector2Int.up, this);
+            commandManager.AddCommand(command);
         }
         else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
-            Debug.Log("Down");
-
-            MoveTiles(Vector2Int.down, 0, 1, grid.height - 2, -1);
+            ICommand command = new MoveCommand(Vector2Int.down, this);
+            commandManager.AddCommand(command);
         }
         else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            Debug.Log("Left");
-
-            MoveTiles(Vector2Int.left, 1, 1, 0, 1);
+            ICommand command = new MoveCommand(Vector2Int.left, this);
+            commandManager.AddCommand(command);
         }
         else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
-            Debug.Log("Right");
-
-            MoveTiles(Vector2Int.right, grid.width - 2, -1, 0, 1);
+            ICommand command = new MoveCommand(Vector2Int.right, this);
+            commandManager.AddCommand(command);
         }
     }
 
-    private void MoveTiles(Vector2Int direction, int startX, int incrementX, int startY, int incrementY)
+    public void MoveTiles(Vector2Int direction, int startX, int incrementX, int startY, int incrementY)
     {
         bool moved = false;
 
@@ -136,6 +152,21 @@ public class TileBoard : MonoBehaviour
         {
             return false;
         }
+    }
+
+    public void SpawnTile(TileCell cell, int number)
+    {
+        Tile tile = Instantiate(tilePrefab, grid.transform);
+        
+        // The index of the tile state is the power of 2 of the number - 1
+        int index = Mathf.RoundToInt(Mathf.Log(number, 2)) - 1;
+        
+        // Clamp the index between 0 and the length of the tile states array
+        index = Mathf.Clamp(index, 0, tileStates.Length - 1);
+
+        tile.SetState(tileStates[index], number);
+        tile.Spawn(cell);
+        tiles.Add(tile);
     }
 
     private bool CanMerge(Tile a, Tile b)
@@ -196,7 +227,7 @@ public class TileBoard : MonoBehaviour
 
         if (tiles.Count < grid.size)
         {
-            CreateTile();
+            SpawnRandomTile();
         }
 
         if (tiles.Count >= grid.size && CheckGameOver())

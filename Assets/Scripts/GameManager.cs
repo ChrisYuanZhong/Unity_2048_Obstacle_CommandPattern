@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI hiscoreText;
 
-    private int score;
+    public int score { get; set; }
 
     private void Start()
     {
@@ -26,8 +26,8 @@ public class GameManager : MonoBehaviour
 
         board.ClearBoard();
 
-        board.CreateTile();
-        board.CreateTile();
+        board.SpawnRandomTile();
+        board.SpawnRandomTile();
 
         board.enabled = true;
     }
