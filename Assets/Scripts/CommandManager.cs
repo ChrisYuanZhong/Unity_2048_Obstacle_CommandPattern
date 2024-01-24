@@ -35,9 +35,11 @@ public class CommandManager
     {
         commands.Clear();
         redoCommands.Clear();
-
-        undoButton.interactable = false;
-        redoButton.interactable = false;
+        
+        if (undoButton != null)
+            undoButton.interactable = false;
+        if (redoButton != null)
+            redoButton.interactable = false;
     }
 
     public void AddCommand(ICommand command)
@@ -52,8 +54,10 @@ public class CommandManager
         commands.Push(command);
         redoCommands.Clear();
 
-        undoButton.interactable = true;
-        redoButton.interactable = false;
+        if (undoButton != null)
+            undoButton.interactable = true;
+        if (redoButton != null)
+            redoButton.interactable = false;
     }
 
     private void RemoveOldestCommand()
@@ -87,12 +91,13 @@ public class CommandManager
         command.Undo();
         redoCommands.Push(command);
 
-        if (commands.Count == 0)
+        if (commands.Count == 0 && undoButton != null)
         {
             undoButton.interactable = false;
         }
 
-        redoButton.interactable = true;
+        if (redoButton != null)
+            redoButton.interactable = true;
     }
 
     public void Redo()
@@ -106,11 +111,12 @@ public class CommandManager
         command.Execute();
         commands.Push(command);
 
-        if (redoCommands.Count == 0)
+        if (redoCommands.Count == 0 && redoButton != null)
         {
             redoButton.interactable = false;
         }
 
-        undoButton.interactable = true;
+        if (undoButton != null)
+            undoButton.interactable = true;
     }
 }
