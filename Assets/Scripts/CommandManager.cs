@@ -14,8 +14,8 @@ public class CommandManager
 
     public CommandManager()
     {
-        commands = new Stack<ICommand>(3);
-        redoCommands = new Stack<ICommand>(3);
+        commands = new Stack<ICommand>(capacity);
+        redoCommands = new Stack<ICommand>(capacity);
 
         undoButton = GameObject.FindWithTag("UndoButton").GetComponent<Button>();
         redoButton = GameObject.FindWithTag("RedoButton").GetComponent<Button>();
