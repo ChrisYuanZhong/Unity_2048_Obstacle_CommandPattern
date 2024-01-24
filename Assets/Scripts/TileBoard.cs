@@ -78,11 +78,6 @@ public class TileBoard : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-
         if (moving)
         {
             return;
