@@ -80,7 +80,6 @@ public class MoveCommand : ICommand
                 {
                     TileCell cell = _board.Grid.GetCell(x, y);
                     _board.SpawnTile(cell, currentBoard[x, y]);
-                    //tile.locked = true;
                 }
             }
         }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class TileBoard : MonoBehaviour
 {
@@ -30,6 +31,16 @@ public class TileBoard : MonoBehaviour
     private void Start()
     {
         commandManager = new CommandManager(undoCapacity);
+    }
+
+    public void NewGame()
+    {
+        commandManager.Clear();
+
+        ClearBoard();
+
+        SpawnRandomTile();
+        SpawnRandomTile();
     }
 
     public void Undo()

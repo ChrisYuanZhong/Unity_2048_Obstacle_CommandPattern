@@ -1755,7 +1755,7 @@ GameObject:
   - component: {fileID: 931249917}
   m_Layer: 5
   m_Name: RedoButton
-  m_TagString: Untagged
+  m_TagString: RedoButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1819,7 +1819,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 931249918}
   m_OnClick:
     m_PersistentCalls:
@@ -2024,7 +2024,7 @@ GameObject:
   - component: {fileID: 1190898783}
   m_Layer: 5
   m_Name: UndoButton
-  m_TagString: Untagged
+  m_TagString: UndoButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2088,7 +2088,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1190898784}
   m_OnClick:
     m_PersistentCalls:

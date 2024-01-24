@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,12 +25,8 @@ public class GameManager : MonoBehaviour
         StartCoroutine(UIFade(gameOverCanvasGroup, 0f, 0f));
         gameOverCanvasGroup.interactable = false;
 
-        board.ClearBoard();
-
-        board.SpawnRandomTile();
-        board.SpawnRandomTile();
-
         board.enabled = true;
+        board.NewGame();
     }
 
     public void GameOver()
