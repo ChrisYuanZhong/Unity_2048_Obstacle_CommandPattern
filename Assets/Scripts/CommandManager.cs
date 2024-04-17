@@ -9,13 +9,13 @@ public class CommandManager
     private Button undoButton;
     private Button redoButton;
 
-    Stack<ICommand> commands;
-    Stack<ICommand> redoCommands;
+    LinkedList<ICommand> commands;
+    LinkedList<ICommand> redoCommands;
 
     public CommandManager()
     {
-        commands = new Stack<ICommand>(capacity);
-        redoCommands = new Stack<ICommand>(capacity);
+        commands = new LinkedList<ICommand>();
+        redoCommands = new LinkedList<ICommand>();
 
         undoButton = GameObject.FindWithTag("UndoButton").GetComponent<Button>();
         redoButton = GameObject.FindWithTag("RedoButton").GetComponent<Button>();
@@ -23,8 +23,8 @@ public class CommandManager
 
     public CommandManager(int capacity)
     {
-        commands = new Stack<ICommand>(capacity);
-        redoCommands = new Stack<ICommand>(capacity);
+        commands = new LinkedList<ICommand>();
+        redoCommands = new LinkedList<ICommand>();
         this.capacity = capacity;
 
         undoButton = GameObject.FindWithTag("UndoButton").GetComponent<Button>();
@@ -35,7 +35,7 @@ public class CommandManager
     {
         commands.Clear();
         redoCommands.Clear();
-        
+
         if (undoButton != null)
             undoButton.interactable = false;
         if (redoButton != null)
@@ -48,36 +48,16 @@ public class CommandManager
 
         if (commands.Count == capacity)
         {
-            RemoveOldestCommand();
+            commands.RemoveFirst();
         }
 
-        commands.Push(command);
+        commands.AddLast(command);
         redoCommands.Clear();
 
         if (undoButton != null)
             undoButton.interactable = true;
         if (redoButton != null)
             redoButton.interactable = false;
-    }
-
-    private void RemoveOldestCommand()
-    {
-        Stack<ICommand> temp = new Stack<ICommand>(capacity - 1);
-
-        for (int i = 0; i < capacity - 1; i++)
-        {
-            temp.Push(commands.Pop());
-        }
-        commands.Pop();
-
-        for (int i = 0; i < capacity - 1; i++)
-        {
-            commands.Push(temp.Pop());
-        }
-
-        temp.Clear();
-
-        return;
     }
 
     public void Undo()
@@ -87,9 +67,10 @@ public class CommandManager
             return;
         }
 
-        ICommand command = commands.Pop();
+        ICommand command = commands.Last.Value;
         command.Undo();
-        redoCommands.Push(command);
+        redoCommands.AddLast(command);
+        commands.RemoveLast();
 
         if (commands.Count == 0 && undoButton != null)
         {
@@ -107,9 +88,10 @@ public class CommandManager
             return;
         }
 
-        ICommand command = redoCommands.Pop();
+        ICommand command = redoCommands.Last.Value;
         command.Execute();
-        commands.Push(command);
+        commands.AddLast(command);
+        redoCommands.RemoveLast();
 
         if (redoCommands.Count == 0 && redoButton != null)
         {
