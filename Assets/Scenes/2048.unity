@@ -505,7 +505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4562,7 +4562,7 @@ MonoBehaviour:
   m_isOnNullable: 1
   m_nullValueEnabled: 0
   backgroundGraphic: {fileID: 383521948}
-  onColor: {r: 1, g: 1, b: 1, a: 1}
+  onColor: {r: 1, g: 0, b: 0, a: 1}
   offColor: {r: 1, g: 1, b: 1, a: 1}
   nullColor: {r: 0.8679245, g: 0.8679245, b: 0.8679245, a: 1}
   tipRect: {fileID: 1581928612}
