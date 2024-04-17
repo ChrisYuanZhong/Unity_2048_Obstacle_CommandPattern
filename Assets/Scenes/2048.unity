@@ -895,6 +895,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 90544257d2027404986212caa3e7102c, type: 2}
   - {fileID: 11400000, guid: b4c6fa47eba1c61499edbe526dae8c07, type: 2}
   - {fileID: 11400000, guid: 4678bf43c6cbcbe4282a87c539e7ed0b, type: 2}
+  obstacleState: {fileID: 11400000, guid: 03fba72185bc70a489e4a1919219e21e, type: 2}
 --- !u!1 &817752411
 GameObject:
   m_ObjectHideFlags: 0

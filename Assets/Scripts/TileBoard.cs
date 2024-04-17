@@ -8,12 +8,15 @@ public class TileBoard : MonoBehaviour
     public GameManager gameManager;
     public static int undoCapacity = 3;
     public static float animationDuration = 0.1f;
+    public static float obstacleChangeChance = 0.1f;
 
     public Tile tilePrefab;
     public TileState[] tileStates;
+    public TileState obstacleState;
 
     private TileGrid grid;
     private List<Tile> tiles;
+    private Tile obstacle;
     private bool moving;
 
     public TileGrid Grid => grid;
@@ -74,6 +77,19 @@ public class TileBoard : MonoBehaviour
         tile.SetState(tileStates[0], 2);
         tile.Spawn(grid.GetRandomEmptyCell());
         tiles.Add(tile);
+
+        // Obstacle
+        if (obstacle == null)
+        {
+            obstacle = Instantiate(tilePrefab, grid.transform);
+            obstacle.SetState(obstacleState, -1);
+            obstacle.Spawn(grid.GetRandomEmptyCell());
+            tiles.Add(obstacle);
+        }
+        else if (Random.value < obstacleChangeChance)
+        {
+            obstacle.MoveTo(grid.GetRandomEmptyCell());
+        }
     }
 
     private void Update()
@@ -130,6 +146,11 @@ public class TileBoard : MonoBehaviour
 
     private bool MoveTile(Tile tile, Vector2Int direction)
     {
+        if (tile.number == -1)
+        {
+            return false;
+        }
+
         TileCell newCell = null;
         TileCell adjacent = grid.GetAdjacentCell(tile.cell, direction);
 
@@ -169,13 +190,22 @@ public class TileBoard : MonoBehaviour
     {
         Tile tile = Instantiate(tilePrefab, grid.transform);
         
-        // The index of the tile state is the power of 2 of the number - 1
-        int index = Mathf.RoundToInt(Mathf.Log(number, 2)) - 1;
-        
-        // Clamp the index between 0 and the length of the tile states array
-        index = Mathf.Clamp(index, 0, tileStates.Length - 1);
+        if (number == -1)
+        {
+            tile.SetState(obstacleState, number);
+            obstacle = tile;
+        }
+        else
+        {
+            // The index of the tile state is the power of 2 of the number - 1
+            int index = Mathf.RoundToInt(Mathf.Log(number, 2)) - 1;
 
-        tile.SetState(tileStates[index], number);
+            // Clamp the index between 0 and the length of the tile states array
+            index = Mathf.Clamp(index, 0, tileStates.Length - 1);
+
+            tile.SetState(tileStates[index], number);
+        }
+        
         tile.Spawn(cell);
         tiles.Add(tile);
     }
@@ -187,7 +217,7 @@ public class TileBoard : MonoBehaviour
             return false;
         }
 
-        return a.number == b.number && !b.locked;
+        return a.number == b.number && !b.locked && a.number != -1;
     }
 
     private void Merge(Tile a, Tile b)
