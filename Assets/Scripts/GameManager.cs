@@ -86,4 +86,10 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("hiscore", score);
         }
     }
+
+    public void ToggleObstacle()
+    {
+        board.enableObstacle = !board.enableObstacle;
+        NewGame();
+    }
 }

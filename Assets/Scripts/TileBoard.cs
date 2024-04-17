@@ -8,6 +8,7 @@ public class TileBoard : MonoBehaviour
     public GameManager gameManager;
     public static int undoCapacity = 3;
     public static float animationDuration = 0.1f;
+    public bool enableObstacle = true;
     public static float obstacleChangeChance = 0.1f;
 
     public Tile tilePrefab;
@@ -79,16 +80,19 @@ public class TileBoard : MonoBehaviour
         tiles.Add(tile);
 
         // Obstacle
-        if (obstacle == null)
+        if (enableObstacle)
         {
-            obstacle = Instantiate(tilePrefab, grid.transform);
-            obstacle.SetState(obstacleState, -1);
-            obstacle.Spawn(grid.GetRandomEmptyCell());
-            tiles.Add(obstacle);
-        }
-        else if (Random.value < obstacleChangeChance)
-        {
-            obstacle.MoveTo(grid.GetRandomEmptyCell());
+            if (obstacle == null)
+            {
+                obstacle = Instantiate(tilePrefab, grid.transform);
+                obstacle.SetState(obstacleState, -1);
+                obstacle.Spawn(grid.GetRandomEmptyCell());
+                tiles.Add(obstacle);
+            }
+            else if (Random.value < obstacleChangeChance)
+            {
+                obstacle.MoveTo(grid.GetRandomEmptyCell());
+            }
         }
     }
 
